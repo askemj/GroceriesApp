@@ -35,9 +35,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblServerStat = new System.Windows.Forms.Label();
-            this.btnUpdServStat = new System.Windows.Forms.Button();
+            this.lblServerStatus = new System.Windows.Forms.Label();
             this.btnUpdRec = new System.Windows.Forms.Button();
             this.lblRetHeader = new System.Windows.Forms.Label();
             this.lblRetTags = new System.Windows.Forms.Label();
@@ -115,32 +113,15 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Du skal bruge:";
             // 
-            // label4
+            // lblServerStatus
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(532, 539);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(126, 17);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "SQL server status:";
-            // 
-            // lblServerStat
-            // 
-            this.lblServerStat.AutoSize = true;
-            this.lblServerStat.Location = new System.Drawing.Point(660, 539);
-            this.lblServerStat.Name = "lblServerStat";
-            this.lblServerStat.Size = new System.Drawing.Size(0, 17);
-            this.lblServerStat.TabIndex = 9;
-            // 
-            // btnUpdServStat
-            // 
-            this.btnUpdServStat.Location = new System.Drawing.Point(451, 536);
-            this.btnUpdServStat.Name = "btnUpdServStat";
-            this.btnUpdServStat.Size = new System.Drawing.Size(75, 23);
-            this.btnUpdServStat.TabIndex = 11;
-            this.btnUpdServStat.Text = "Opdater Server Status";
-            this.btnUpdServStat.UseVisualStyleBackColor = true;
-            this.btnUpdServStat.Click += new System.EventHandler(this.btnUpdServStat_Click);
+            this.lblServerStatus.AutoSize = true;
+            this.lblServerStatus.Location = new System.Drawing.Point(620, 536);
+            this.lblServerStatus.Name = "lblServerStatus";
+            this.lblServerStatus.Size = new System.Drawing.Size(126, 17);
+            this.lblServerStatus.TabIndex = 8;
+            this.lblServerStatus.Text = "SQL server unavailable";
+            this.lblServerStatus.Click += new System.EventHandler(this.labelServerStatus_Click);
             // 
             // btnUpdRec
             // 
@@ -230,9 +211,7 @@
             this.Controls.Add(this.lblRetTags);
             this.Controls.Add(this.lblRetHeader);
             this.Controls.Add(this.btnUpdRec);
-            this.Controls.Add(this.btnUpdServStat);
-            this.Controls.Add(this.lblServerStat);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.lblServerStatus);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -258,9 +237,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        public System.Windows.Forms.Label lblServerStat;
-        private System.Windows.Forms.Button btnUpdServStat;
+        private System.Windows.Forms.Label lblServerStatus;
         private System.Windows.Forms.Button btnUpdRec;
         private System.Windows.Forms.Label lblRetHeader;
         private System.Windows.Forms.Label lblRetTags;

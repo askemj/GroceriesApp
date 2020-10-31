@@ -26,7 +26,7 @@ namespace Groceries_App
 
         private void btnServerLoginOK_Click(object sender, EventArgs e)
         {
-            sqlLoginGo();
+            SqlLoginGo();
         }
 
 
@@ -34,26 +34,27 @@ namespace Groceries_App
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                sqlLoginGo();
+                SqlLoginGo();
             }
         }
 
-        private void sqlLoginGo()
+        private void SqlLoginGo()
         {
             string p = tbPass.Text;
             string user = tbUser.Text;
             string IP = tbServerIP.Text;
 
-            Backend.SQL.setupSQL(user, p, IP);
+            Backend.SQL.SetupSQL(user, p, IP);
             tbPass.Text = "";
-            if (Backend.SQL.testConnection())
+            Backend.SQL.testConnection();
+            if (Backend.SQL.ConnectionStatus == "available")
             {
                 this.Close();
                 p = "";
             }
             else
             {
-                MessageBox.Show("Fejl ved login på SQL server. Prøv igen.", "SQL login-fejl");
+                MessageBox.Show("Error on server login. Please try again.", "SQL login error");
             }
         }
     }
