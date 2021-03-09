@@ -15,18 +15,18 @@ namespace Groceries_App
         public groceriesGUI()
         {
             InitializeComponent();
-            SQLlogin loginprompt = new SQLlogin();
-            loginprompt.Show(); 
         }
 
         private void groceriesGUI_Load(object sender, EventArgs e)
         {
-
+            SQLlogin loginprompt = new SQLlogin();
+            loginprompt.Show();
+            loginprompt.Activate();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            searchRec();
+            SearchRecipe();
         }
 
         private void btnUpdServStat_Click(object sender, EventArgs e)
@@ -70,9 +70,12 @@ namespace Groceries_App
         private void btnAddToShopList_Click(object sender, EventArgs e)
         {
             string selectedRecipe = lbRet.SelectedItem.ToString();
-            Backend.Recipe recipe = new Backend.Recipe(selectedRecipe);
-            Backend.shopList.AddRecipe(recipe);
-            lblNoRecOnShopList.Text = Backend.shopList.noRecOnShopList().ToString();
+            Backend.Recipe recipe = Backend.SQL.GetRecipe(selectedRecipe);
+
+            //Backend.shopList.AddRecipe(recipe);
+            AddRecipeToShoppingList add_recipe_prompt = new AddRecipeToShoppingList(recipe);
+
+            add_recipe_prompt.Show();
         }
 
         private void btnGenShopList_Click(object sender, EventArgs e)
@@ -89,7 +92,7 @@ namespace Groceries_App
             }
         }
 
-        private void searchRec()
+        private void SearchRecipe()
         {
             string key = tbSearch.Text;
             List<string> lRetter = Backend.SQL.SearchRecipe(key);
@@ -105,32 +108,47 @@ namespace Groceries_App
 
         private void ShowRecipe(string recipeName)
         {
-            lblRetHeader.Text = recipeName;
+            Backend.Recipe recipe = Backend.SQL.GetRecipe(recipeName);
 
-            Backend.Recipe recipe = new Backend.Recipe(recipeName);
-
+            lblRetHeader.Text = recipe.Name;
+            lblPrepTime.Text = "Arbejdstid: " + recipe.PreparationTime.ToString() + "min   Tilberedningstid: " + recipe.TotalTime.ToString() + " min";
             lblRetTags.Text = "Tags: " + String.Join(", ", recipe.Tags);
+            rtbIngredienser.Text = getIngredientsTextString(recipe);
+            rtbNoter.Text = recipe.Notes;
+        }
 
+        private string getIngredientsTextString(Backend.Recipe recipe)
+        {
             string ingredientTextString = "";
             foreach (Backend.GroceryItem ingredient in recipe.Ingredients)
             {
+                ingredientTextString += ingredient.Quantity.ToString() + " " + ingredient.Unit + " " + ingredient.Name + "\n";
+            }
+
+            ingredientTextString += "\n\n Eventuelt: \n";
+
+            foreach (Backend.GroceryItem ingredient in recipe.Twists)
+            {
                 ingredientTextString += ingredient.Name + "\n";
             }
-            rtbIngredienser.Text = ingredientTextString;
-
-            lblPrepTime.Text = "Tilberedningstid: " + recipe.PreparationTime + " Minutter";
+            if (recipe.UsesLeftovers.Count != 0)
+            {
+                ingredientTextString += "\n\n Rester der kan tilføjes: \n";
+                ingredientTextString += String.Join("\n", recipe.UsesLeftovers);
+            }
+            return ingredientTextString;
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            searchRec();
+            SearchRecipe();
         }
 
         private void tbSearch_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
-                searchRec();
+                SearchRecipe();
             }
         }
 
@@ -138,6 +156,56 @@ namespace Groceries_App
         {
             Backend.SQL.testConnection();
             lblServerStatus.Text = "SQL server " + Backend.SQL.ConnectionStatus;
+        }
+
+        private void btnAddEditDish_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("DEBUG: bnAddEditDish has been clicked... ");
+            //Backend.Recipe recipe = new Backend.Recipe("dummytitle", false);
+            Backend.Recipe recipe = new Backend.Recipe(" ", false);
+            AddEditRecipe add_edit_recipe_prompt = new AddEditRecipe(recipe);
+            add_edit_recipe_prompt.Visible = true;
+            add_edit_recipe_prompt.Show();
+        }
+
+        private void rtbNoter_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnTestConsole_Click(object sender, EventArgs e)
+        {
+            TestConsole testKonsol = new TestConsole();
+            testKonsol.Visible = true;
+            testKonsol.Show();
+        }
+
+        private void btnEditDish_Click(object sender, EventArgs e)
+        {
+            {
+                Console.WriteLine("DEBUG: bnAddEditDish for editing has been clicked... ");
+                //Backend.Recipe recipe = new Backend.Recipe("dummytitle", false);
+                if (lbRet.SelectedItem != null)
+                {
+                    string recipeTitle = lbRet.SelectedItem.ToString();
+                    Backend.Recipe recipe = Backend.SQL.GetRecipe(recipeTitle);
+                    AddEditRecipe add_edit_recipe_prompt = new AddEditRecipe(recipe);
+                    add_edit_recipe_prompt.Visible = true;
+                    add_edit_recipe_prompt.Show();
+                }
+            }
+        }
+
+        private void btnAddLooseItems_Click(object sender, EventArgs e)
+        {
+            AddLooseItems addLooseItemsPrompt = new AddLooseItems();
+
+            addLooseItemsPrompt.Show();
+        }
+
+        private void rtbIngredienser_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

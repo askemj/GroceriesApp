@@ -46,6 +46,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddRecipeToShoppingList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddRecipeToShoppingList.Designer.cs">
+      <DependentUpon>AddRecipeToShoppingList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddLooseItems.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddLooseItems.Designer.cs">
+      <DependentUpon>AddLooseItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestConsole.Designer.cs">
+      <DependentUpon>TestConsole.cs</DependentUpon>
+    </Compile>
     <Compile Include="groceriesGUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,6 +78,21 @@
     <Compile Include="SQLlogin.Designer.cs">
       <DependentUpon>SQLlogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddEditRecipe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddEditRecipe.Designer.cs">
+      <DependentUpon>AddEditRecipe.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AddLooseItems.resx">
+      <DependentUpon>AddLooseItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddRecipeToShoppingList.resx">
+      <DependentUpon>AddRecipeToShoppingList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestConsole.resx">
+      <DependentUpon>TestConsole.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="groceriesGUI.resx">
       <DependentUpon>groceriesGUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -75,6 +108,11 @@
     <EmbeddedResource Include="SQLlogin.resx">
       <DependentUpon>SQLlogin.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AddEditRecipe.resx">
+      <DependentUpon>AddEditRecipe.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\DataSources\Backend.GroceryItem.datasource" />
+    <None Include="Properties\DataSources\Backend.Recipe.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

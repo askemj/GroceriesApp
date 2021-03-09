@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,16 @@ namespace Backend
             SelectedRecipes.Add(recipe);
         }
 
+        public static void AddToLooseItems(GroceryItem item)
+        {
+            LooseItems.Add(item);
+        }
+
+        public static List<GroceryItem> GetLooseItems()
+        {
+            return LooseItems;
+        }
+
         public static string GenerateShopList()
         {
             string shopListString = "";
@@ -26,28 +37,113 @@ namespace Backend
             string categoryAndGroceries = "";
 
             List<GroceryItem> allGroceryItems = new List<GroceryItem>();
+
             foreach (Backend.Recipe recipe in SelectedRecipes)
             {
                 allGroceryItems.AddRange(recipe.Ingredients);
+                allGroceryItems.AddRange(recipe.Twists);
                 menu += recipe.Name + "\n";
             }
 
-            IEnumerable<string> categories = allGroceryItems.Select(x => x.Category).Distinct();
-            // introduce sorting of categories to match supermarket, sort according to pattern 
-            foreach(string categoryName in categories)
+            allGroceryItems.AddRange(LooseItems.ToArray());
+
+            List<GroceryItem> reducedGroceryItemsList = getReducedGroceryItemsList(allGroceryItems); 
+
+            List<string> categories = reducedGroceryItemsList.Select(x => x.Category).Distinct().ToList();
+
+            List<string> categoriesOrdered = orderCategories(categories);
+
+            foreach(string categoryName in categoriesOrdered)
             {
-                string groceryItemsInCategory = String.Join("\n", allGroceryItems.Where(x => x.Category == categoryName).Select(x => x.Name));
+                string groceryItemsInCategory = String.Join("\n", reducedGroceryItemsList.Where(x => x.Category == categoryName && x.Quantity != 0).Select(item => $"{item.Quantity.ToString()} {item.Unit} {item.Name}") );
                 
-                categoryAndGroceries += categoryName + "\n" + 
-                    groceryItemsInCategory + "\n" + 
-                    "\n";
+                string groceryItemsInCategoryWOUnit = String.Join("\n", reducedGroceryItemsList.Where(x => x.Category == categoryName && x.Quantity == 0).Select(item => $"{item.Name}"));
+
+                categoryAndGroceries += categoryName;
+
+                if (groceryItemsInCategory != "")
+                {
+                    categoryAndGroceries += "\n" + groceryItemsInCategory;
+                }
+                if (groceryItemsInCategoryWOUnit != "")
+                {
+                    categoryAndGroceries += "\n" + groceryItemsInCategoryWOUnit;
+                }
+                categoryAndGroceries += "\n"
+                    + "\n";
             }
 
             shopListString = "Menu \n" +
                 menu + "\n" +
                 categoryAndGroceries;
 
+            Clipboard.SetText(shopListString);
+
             return shopListString;
+        }
+
+        private static List<string> orderCategories(List<string> categories)
+        {
+            List<string> orderedcategories = new List<string>();
+            
+            // setup sort directions as array 
+            var categoriesArray = new[]
+            {
+               new {Category = "Frugt & Grønt", Order = 1 },
+               new {Category = "Brød", Order = 2},
+               new {Category = "Kød & Fisk", Order = 3},
+               new {Category = "Tørvarer", Order = 4},
+               new {Category = "Drikkevarer", Order = 5},
+               new {Category = "Pålæg", Order = 6},
+               new {Category = "Mejeri", Order = 7},
+               new {Category = "Frost", Order = 8},
+               new {Category = "Personlig Pleje", Order = 9},
+               new {Category = "Konserves", Order = 10},
+               new {Category = "Husholdning", Order = 11},
+               new {Category = "Diverse", Order = 12}
+            };
+
+            foreach (var cat in categoriesArray.OrderBy(c => c.Order))
+            {
+                if (categories.Contains(cat.Category))
+                {
+                    Console.WriteLine("Categories contained " + cat.Category);
+                    orderedcategories.Add(cat.Category);
+                }
+            }
+            return orderedcategories;
+        }
+
+        private static List<GroceryItem> getReducedGroceryItemsList(List<GroceryItem> itemList)
+        {
+            List<GroceryItem> reducedItemsList = new List<GroceryItem>();
+
+            foreach (GroceryItem item in itemList)
+            {
+                Console.WriteLine("Item selected: " + item.Name);
+                if ( reducedItemsList.Exists(i => i.Name == item.Name & i.Unit == item.Unit) )
+                {
+                    reducedItemsList.Find(i => i.Name == item.Name & i.Unit == item.Unit).Quantity += item.Quantity;
+                    Console.WriteLine("item is the reduced items list, the quantity is " + reducedItemsList.Find(i => i.Name == item.Name & i.Unit == item.Unit).Quantity.ToString());
+                }
+                else
+                {
+                    Console.WriteLine("item is not in the reduced items list");
+                    reducedItemsList.Add(item);
+                }
+            }
+
+            //IEnumerable<object> uniqueItemTypes = itemList.Select(item => new {item.Name, item.Unit}).Distinct()
+            //foreach (object uType in uniqueItemTypes)
+            //{
+            //    itemList.Where(item => item.Name == uType.Name.ToString());
+            //};
+
+            //double total = myList.Where(item => item.Name == "Eggs").Sum(item => item.Amount);
+
+            
+
+            return reducedItemsList;
         }
 
         public static void addRet(string retNavn)

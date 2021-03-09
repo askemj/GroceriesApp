@@ -9,11 +9,13 @@ namespace Backend
     public class GroceryItem
     {
         public string Name { get; set;}
+        public string Unit { get; set; }
+        public float Quantity { get; set; }
         public string Category { get; set; } 
-        public GroceryItem(string name, string category)
+        public bool BasicItem { get; set; }
+        public GroceryItem(string name)
         {
             Name = name;
-            Category = category;
         }
     }
 }

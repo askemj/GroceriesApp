@@ -49,8 +49,9 @@ namespace Groceries_App
             Backend.SQL.testConnection();
             if (Backend.SQL.ConnectionStatus == "available")
             {
-                this.Close();
                 p = "";
+                this.Close();
+                this.Dispose();
             }
             else
             {
